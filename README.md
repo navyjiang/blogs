@@ -1,0 +1,1 @@
+[KingshardÔÄ¶Á±Ê¼Ç](https://github.com/navyjiang/blogs/blob/master/kingshard.md "kingshardÔÄ¶Á")
