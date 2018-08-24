@@ -22,12 +22,16 @@ insert,update,delete,replace 请求或者事务中的select请求直接发给mas
 
 如果当前语句执行在事务环境下，且执行计划确定的node数大于1，则报错。
 
+## SQL语句的解析
+
+采用go yacc，略。
+
 ## SQL预处理
 
 * SQL黑名单处理
 * 不需分片的SQL提前处理
 
-## 生成查询计划
+## 生成执行计划
 
 ### 目的
     
@@ -36,7 +40,12 @@ insert,update,delete,replace 请求或者事务中的select请求直接发给mas
 * 每个node对应一个物理连接，每个分片对应一个表，每个node可以对应多个表，每个表对应一条SQL语句。
 * 如果没有分片，则SQL发给第一个node（通常是缺省node）
 * 如果没有where条件，则SQL发给所有node的所有分片表
-
+* 执行计划中的 Rule 是根据分片表名，从配置文件中获取的。而分片表名，是从SQL语句中得到的。
+ * Select 语句仅把from[0]作为分片表。
+ * 其他语句呢？比如 delete 和 update 语句可以从多于一个表删除或更新多表的，是如何处理的？Kingshard貌似没处理多表删除或更新的情况。
+* 对 select，update, delete 语句生成执行计划根据where条件进行，判断分片key所在的判断条件，根据值与分片key的关系，及分片规则找到数据位于哪个分片表，进而位于哪个node，从而生成执行计划。
+* 对 insert，replace 语句生成执行计划根据插入的数据进行，先判断分片key在那一列，然后对要插入的每行数据根据分片key那一列的值及分片规则找到数据位于哪个分片表，进而位于哪个node，从而生成执行计划。
+ 
 ## 改写SQL
 + 在select xxx 中添加所有group by中的列（用于后面合并各分片的结果）
 + 修改表名为分片表名（列名前缀处，from处，Join的左边）
