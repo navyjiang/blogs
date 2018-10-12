@@ -1,1 +1,2 @@
-[Kingshard阅读笔记](https://github.com/navyjiang/blogs/blob/master/kingshard.md "kingshard阅读")
+* [percolator 事务协议](https://github.com/navyjiang/blogs/blob/master/percolatorTransaction.md "percolator 事务协议")
+* [Kingshard 阅读笔记](https://github.com/navyjiang/blogs/blob/master/kingshard.md "kingshard 阅读")
